@@ -42,6 +42,12 @@ type BankAccountList struct {
 
 // AppendDetails adds the bank account's details to the query string values.
 func (b *BankAccountParams) AppendDetails(values *url.Values) {
+	if len(b.Token) > 0 {
+
+		// Create a token for ACH payments using Connect.
+		values.Add("bank_account", b.Token)
+		return
+	}
 	values.Add("bank_account[country]", b.Country)
 	values.Add("bank_account[routing_number]", b.Routing)
 	values.Add("bank_account[account_number]", b.Account)

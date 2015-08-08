@@ -20,6 +20,7 @@ import (
 	"github.com/stripe/stripe-go/fileupload"
 	"github.com/stripe/stripe-go/invoice"
 	"github.com/stripe/stripe-go/invoiceitem"
+	"github.com/stripe/stripe-go/paymentsource"
 	"github.com/stripe/stripe-go/plan"
 	"github.com/stripe/stripe-go/recipient"
 	"github.com/stripe/stripe-go/refund"
@@ -100,7 +101,8 @@ type API struct {
 	// Reversals is the client used to invoke /transfers/reversals APIs.
 	Reversals *reversal.Client
 	// BankAccounts is the client used to invoke /accounts/bank_accounts APIs.
-	BankAccounts *bankaccount.Client
+	BankAccounts  *bankaccount.Client
+	PaymentSource *paymentsource.Client
 }
 
 // Init initializes the Stripe client with the appropriate secret key
@@ -134,4 +136,5 @@ func (a *API) Init(key string, backends *Backends) {
 	a.BitcoinTransactions = &bitcointransaction.Client{B: backends.API, Key: key}
 	a.Reversals = &reversal.Client{B: backends.API, Key: key}
 	a.BankAccounts = &bankaccount.Client{B: backends.API, Key: key}
+	a.PaymentSource = &paymentsource.Client{B: backends.API, Key: key}
 }

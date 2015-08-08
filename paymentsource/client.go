@@ -23,7 +23,7 @@ func New(params *stripe.CustomerSourceParams) (*stripe.PaymentSource, error) {
 
 func (s Client) New(params *stripe.CustomerSourceParams) (*stripe.PaymentSource, error) {
 	body := &url.Values{}
-	params.Source.AppendDetails(body, true)
+	// params.Source.AppendDetails(body, true)
 	params.AppendTo(body)
 
 	source := &stripe.PaymentSource{}
@@ -74,7 +74,7 @@ func Update(id string, params *stripe.CustomerSourceParams) (*stripe.PaymentSour
 
 func (s Client) Update(id string, params *stripe.CustomerSourceParams) (*stripe.PaymentSource, error) {
 	body := &url.Values{}
-	params.Source.AppendDetails(body, false)
+	// params.Source.AppendDetails(body, false)
 	params.AppendTo(body)
 
 	source := &stripe.PaymentSource{}
@@ -102,6 +102,28 @@ func (s Client) Del(id string, params *stripe.CustomerSourceParams) error {
 	} else {
 		return errors.New("Invalid source params: customer needs to be set")
 	}
+}
+
+// Verify verifies a bank account.
+func Verify(id string, params *stripe.CustomerSourceParams) (*stripe.PaymentSource, error) {
+	return getC().Verify(id, params)
+}
+
+func (s Client) Verify(id string, params *stripe.CustomerSourceParams) (*stripe.PaymentSource, error) {
+	body := &url.Values{}
+	// params.Source.AppendDetails(body, false)
+	params.AppendTo(body)
+
+	source := &stripe.PaymentSource{}
+	var err error
+
+	if len(params.Customer) > 0 {
+		err = s.B.Call("POST", fmt.Sprintf("/customers/%v/bank_accounts/%v/verify", params.Customer, id), s.Key, body, &params.Params, source)
+	} else {
+		err = errors.New("Invalid source params: customer needs to be set")
+	}
+
+	return source, err
 }
 
 // List returns a list of sources.
