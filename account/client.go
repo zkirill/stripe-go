@@ -74,6 +74,11 @@ func writeAccountParams(
 	if params.BankAccount != nil {
 		params.BankAccount.AppendDetails(body)
 	}
+
+	// Stripe TOS acceptance.
+	if params.TOSAcceptance != nil {
+		params.TOSAcceptance.AppendDetails(body)
+	}
 }
 
 func (c Client) New(params *stripe.AccountParams) (*stripe.Account, error) {
